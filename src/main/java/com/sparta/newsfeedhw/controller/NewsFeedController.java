@@ -5,6 +5,7 @@ import com.sparta.newsfeedhw.dto.NewsFeedResponseDto;
 import com.sparta.newsfeedhw.security.UserDetailsImpl;
 import com.sparta.newsfeedhw.service.NewsFeedService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -21,7 +23,6 @@ public class NewsFeedController {
 
     //게시물 작성
     @PostMapping("/newsfeeds")
-    @ResponseBody
     public NewsFeedResponseDto createNewsFeed(@RequestBody NewsFeedRequestDto request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return newsFeedService.createNewsFeed(request, userDetails.getUser());
     }
@@ -42,10 +43,9 @@ public class NewsFeedController {
     }
 
     @PutMapping("/newsfeeds/{id}")
-    public NewsFeedResponseDto updateNewsFeed (@PathVariable Long id, @RequestBody  NewsFeedRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+    public NewsFeedResponseDto updateNewsFeed (@PathVariable Long id, @RequestBody  NewsFeedRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return newsFeedService.updateNewsFeed(id, requestDto, userDetails);
     }
-
 
     //게시물 삭제
     @DeleteMapping("/newsfeeds/{id}")

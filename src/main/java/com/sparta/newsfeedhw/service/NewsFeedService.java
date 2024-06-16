@@ -22,10 +22,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NewsFeedService {
     private final NewsFeedRepository newsFeedRepository;
-    private final UserRepository userRepository;
 
     //저장기능 구현
-    public NewsFeedResponseDto createNewsFeed(NewsFeedRequestDto request, User user) {
+    public NewsFeedResponseDto createNewsFeed( NewsFeedRequestDto request, User user) {
         NewsFeed newsFeed = newsFeedRepository.save(new NewsFeed(request, user));
         return new NewsFeedResponseDto(newsFeed);
     }
@@ -56,19 +55,28 @@ public class NewsFeedService {
     }
 
     @Transactional
-    public NewsFeedResponseDto updateNewsFeed(Long newsFeedId, NewsFeedRequestDto requestDto, UserDetails userDetails) {
+    public NewsFeedResponseDto updateNewsFeed(Long newsFeedId, NewsFeedRequestDto requestDto, UserDetailsImpl userDetails) {
 
         String username = userDetails.getUsername();
+
+
         Optional<NewsFeed> optionalNewsFeed = newsFeedRepository.findById(newsFeedId);
-        NewsFeed newsFeed = optionalNewsFeed.orElseThrow(() -> new IllegalArgumentException("해당 ID로 뉴스피드 찾을 수 없습니다."));
+
+
+        NewsFeed newsFeed = optionalNewsFeed.orElseThrow(()-> new IllegalArgumentException("해당 ID로 뉴스피드 찾을 수 없습니다."));
+
+
         User user = newsFeed.getUser();
 
         if(!username.equals(user.getUsername())) {
+
             throw new SecurityException("수정 권한이 없습니다.");
+
         }
 
         newsFeed.setContents(requestDto.getContents());
         newsFeedRepository.save(newsFeed);
+
 
         return new NewsFeedResponseDto(newsFeed);
 

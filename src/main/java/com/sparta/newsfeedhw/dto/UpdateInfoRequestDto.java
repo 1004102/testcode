@@ -1,12 +1,13 @@
 package com.sparta.newsfeedhw.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UpdateInfoRequestDto {
-    String username;
-    String password;
-    String introduce;
+    private String password;
+    private String introduce;
 }
